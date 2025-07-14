@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Snapchat Filters</title>
+  <style>
+    body {
+      text-align: center;
+      background-color: #fffde7;
+      font-family: Arial, sans-serif;
+    }
+
+    h1 {
+      margin-top: 20px;
+    }
+
+    video, canvas {
+      width: 400px;
+      height: auto;
+      border-radius: 20px;
+      margin-top: 20px;
+      border: 3px solid #fdd835;
+    }
+
+    .filters, .actions {
+      margin-top: 20px;
+    }
+
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background-color: #fdd835;
+    }
+
+    button:hover {
+      background-color: #fbc02d;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Snapchat Camera Filters</h1>
+
+  <!-- Live video stream -->
+  <video id="video" autoplay></video>
+
+  <!-- Filter buttons -->
+  <div class="filters">
+    <button onclick="applyFilter('none')">Normal</button>
+    <button onclick="applyFilter('grayscale(100%)')">Grayscale</button>
+    <button onclick="applyFilter('sepia(100%)')">Sepia</button>
+    <button onclick="applyFilter('blur(4px)')">Blur</button>
+    <button onclick="applyFilter('invert(100%)')">Invert</button>
+    <button onclick="applyFilter('brightness(140%)')">Bright</button>
+    <button onclick="applyFilter('contrast(200%)')">Contrast</button>
+    <button onclick="applyFilter('hue-rotate(90deg)')">Hue Rotate</button>
+  </div>
+
+  <!-- Action buttons -->
+  <div class="actions">
+    <button onclick="capturePhoto()">📸 Capture</button>
+    <button onclick="downloadPhoto()">💾 Download</button>
+  </div>
+
+  <!-- Canvas to display the snapshot -->
+  <canvas id="snapshot" width="400" height="300"></canvas>
+
+  <script>
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('snapshot');
+    const context = canvas.getContext('2d');
+
+    // Start webcam
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(stream => {
+        video.srcObject = stream;
+      })
+      .catch(err => {
+        alert("Camera access denied or not supported: " + err);
+      });
+
+    // Apply filter to live video
+    function applyFilter(filter) {
+      video.style.filter = filter;
+      canvas.style.filter = filter; // Apply same filter to captured image
+    }
+
+    // Capture photo to canvas
+    function capturePhoto() {
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+    }
+
+    // Download image from canvas
+    function downloadPhoto() {
+      const link = document.createElement('a');
+      link.download = 'snapchat-photo.jpg';
+      link.href = canvas.toDataURL('image/jpeg');
+      link.click();
+    }
+  </script>
+
+</body>
+</html>
